@@ -82,21 +82,29 @@ npm start
 
 You should see:
 ```
-📧 Email Sending API running on port 3001
-🌐 Health check: http://localhost:3001/health
-📖 API docs: http://localhost:3001/
+📧 Email Sending API running on port 10000
+🌐 Health check: http://localhost:10000/health
+📖 API docs: http://localhost:10000/
+✅ Email configured: your_email@gmail.com (gmail)
+⚠️  Note: Gmail requires App Passwords (not available in all countries).
+💡 If authentication fails, try: EMAIL_SERVICE=outlook or create a new Outlook account.
+📖 See SOLUTIONS_FOR_KENYA.md for alternatives.
 ```
+
+**Note**: The port may be different (3001, 10000, etc.) depending on your `PORT` environment variable. The default is 3001, but Render and other platforms may set it to 10000.
 
 ### Step 4: Authenticate with Gmail (One-Time)
 
 1. **Get authorization URL**:
    ```bash
-   # In browser, visit:
-   http://localhost:3001/api/oauth2/auth
+   # In browser, visit (replace 10000 with your actual port):
+   http://localhost:10000/api/oauth2/auth
    
    # Or use curl:
-   curl http://localhost:3001/api/oauth2/auth
+   curl http://localhost:10000/api/oauth2/auth
    ```
+   
+   **Note**: Replace `10000` with your actual port (check the terminal output when you start the API).
 
 2. **Copy the `authUrl`** from the response
 
@@ -107,8 +115,9 @@ You should see:
 5. **Click "Allow"** to grant permissions
 
 6. **Copy the code** from the redirect URL:
-   - The URL will look like: `http://localhost:3001/api/oauth2/callback?code=4/0A...`
+   - The URL will look like: `http://localhost:10000/api/oauth2/callback?code=4/0A...`
    - Copy everything after `code=` (the long string)
+   - **Note**: The port (10000) should match your API port
 
 7. **Complete authentication**:
    ```bash
@@ -134,7 +143,8 @@ You should see:
 ### Step 5: Send Your First Email!
 
 ```bash
-curl -X POST http://localhost:3001/api/send-email \
+# Replace 10000 with your actual port
+curl -X POST http://localhost:10000/api/send-email \
   -H "Content-Type: application/json" \
   -d '{
     "to": "recipient@example.com",
@@ -207,7 +217,8 @@ npm start
 ### Step 4: Send Your First Email!
 
 ```bash
-curl -X POST http://localhost:3001/api/send-email \
+# Replace 10000 with your actual port
+curl -X POST http://localhost:10000/api/send-email \
   -H "Content-Type: application/json" \
   -d '{
     "to": "recipient@example.com",
@@ -238,7 +249,8 @@ PORT=3001
 EMAIL=your_email@outlook.com
 EMAIL_PASSWORD=your_password
 EMAIL_SERVICE=outlook
-PORT=3001
+PORT=10000
+# Note: Port 10000 is common for Render. Use 3001 for local development.
 
 # Optional: Custom SMTP
 # SMTP_HOST=smtp.yourdomain.com
