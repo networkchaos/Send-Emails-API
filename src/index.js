@@ -13,6 +13,14 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
+// Gmail OAuth2 support (works in Kenya!)
+let gmailOAuth = null;
+try {
+  gmailOAuth = require('./gmailOAuth');
+} catch (error) {
+  console.log('⚠️  Gmail OAuth2 not available (googleapis not installed). Install with: npm install googleapis google-auth-library');
+}
+
 const app = express();
 // Port configuration - platforms like Render use PORT from env
 const PORT = process.env.PORT || 3001;
