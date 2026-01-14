@@ -83,6 +83,20 @@ function createTransporter(config) {
         rejectUnauthorized: false
       }
     });
+  } else if (service === 'zoho') {
+    // Zoho Mail configuration (works in Kenya, no App Password needed)
+    return nodemailer.createTransport({
+      host: 'smtp.zoho.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: email,
+        pass: password
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
   } else {
     // Predefined service (gmail, outlook, yahoo, etc.)
     return nodemailer.createTransport({
@@ -459,7 +473,15 @@ app.listen(PORT, () => {
   console.log(`📖 API docs: http://localhost:${PORT}/`);
   
   if (process.env.EMAIL && process.env.EMAIL_PASSWORD) {
-    console.log(`✅ Email configured: ${process.env.EMAIL}`);
+    const emailService = process.env.EMAIL_SERVICE || 'gmail';
+    console.log(`✅ Email configured: ${process.env.EMAIL} (${emailService})`);
+    
+    // Special message for Gmail users in restricted regions
+    if (emailService === 'gmail' && process.env.EMAIL.includes('@gmail.com')) {
+      console.log(`⚠️  Note: Gmail requires App Passwords (not available in all countries).`);
+      console.log(`💡 If authentication fails, try: EMAIL_SERVICE=outlook or create a new Outlook account.`);
+      console.log(`📖 See SOLUTIONS_FOR_KENYA.md for alternatives.`);
+    }
   } else {
     console.log(`⚠️  Email credentials not set. Set EMAIL and EMAIL_PASSWORD environment variables.`);
   }
