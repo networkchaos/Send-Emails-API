@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: send-emails-api
+    env: node
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: EMAIL
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: EMAIL_SERVICE
+        value: gmail
+      - key: PORT
+        value: 10000

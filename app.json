@@ -1,0 +1,42 @@
+{
+  "name": "Email Sending API",
+  "description": "Standalone email sending API service",
+  "repository": "https://github.com/yourusername/email-sending-api",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["email", "api", "smtp", "nodemailer"],
+  "env": {
+    "EMAIL": {
+      "description": "Your email address",
+      "required": true
+    },
+    "EMAIL_PASSWORD": {
+      "description": "Your email password or app password",
+      "required": true
+    },
+    "EMAIL_SERVICE": {
+      "description": "Email service provider (gmail, outlook, yahoo, or custom)",
+      "value": "gmail",
+      "required": false
+    },
+    "SMTP_HOST": {
+      "description": "SMTP host (only needed if EMAIL_SERVICE=custom)",
+      "required": false
+    },
+    "SMTP_PORT": {
+      "description": "SMTP port (only needed if EMAIL_SERVICE=custom)",
+      "value": "587",
+      "required": false
+    },
+    "SMTP_SECURE": {
+      "description": "Use secure connection (only needed if EMAIL_SERVICE=custom)",
+      "value": "false",
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
