@@ -181,18 +181,36 @@ app.post('/api/send-email', async (req, res) => {
 
   } catch (error) {
     console.error('Error sending email:', error);
+    console.error('Full error details:', {
+      code: error.code,
+      command: error.command,
+      responseCode: error.responseCode,
+      response: error.response
+    });
     
     let errorMessage = error.message || 'Unknown error';
+    let detailedHelp = '';
+    
     if (error.code === 'EAUTH') {
       errorMessage = 'Email authentication failed. Please check your email credentials.';
+      detailedHelp = 'For Gmail: Use an App Password (not your regular password). Generate one at https://myaccount.google.com/apppasswords. For Outlook: Use your regular password or App Password if 2FA is enabled.';
     } else if (error.code === 'ECONNECTION') {
       errorMessage = 'Could not connect to email server. Please check your SMTP settings.';
+      detailedHelp = 'Check your internet connection and verify SMTP_HOST and SMTP_PORT are correct.';
+    } else if (error.responseCode === 535) {
+      errorMessage = 'Authentication failed. Invalid email or password.';
+      detailedHelp = 'Verify your email and password are correct. For Gmail, use an App Password.';
+    } else if (error.command === 'API') {
+      errorMessage = 'Gmail API authentication failed.';
+      detailedHelp = 'Gmail requires App Passwords when 2FA is enabled. Generate one at https://myaccount.google.com/apppasswords or use Outlook instead.';
     }
 
     res.status(500).json({
       success: false,
       error: errorMessage,
-      code: error.code
+      help: detailedHelp,
+      code: error.code,
+      responseCode: error.responseCode
     });
   }
 });
@@ -308,18 +326,36 @@ app.post('/api/send-email-with-attachments', async (req, res) => {
 
   } catch (error) {
     console.error('Error sending email with attachments:', error);
+    console.error('Full error details:', {
+      code: error.code,
+      command: error.command,
+      responseCode: error.responseCode,
+      response: error.response
+    });
     
     let errorMessage = error.message || 'Unknown error';
+    let detailedHelp = '';
+    
     if (error.code === 'EAUTH') {
       errorMessage = 'Email authentication failed. Please check your email credentials.';
+      detailedHelp = 'For Gmail: Use an App Password (not your regular password). Generate one at https://myaccount.google.com/apppasswords. For Outlook: Use your regular password or App Password if 2FA is enabled.';
     } else if (error.code === 'ECONNECTION') {
       errorMessage = 'Could not connect to email server. Please check your SMTP settings.';
+      detailedHelp = 'Check your internet connection and verify SMTP_HOST and SMTP_PORT are correct.';
+    } else if (error.responseCode === 535) {
+      errorMessage = 'Authentication failed. Invalid email or password.';
+      detailedHelp = 'Verify your email and password are correct. For Gmail, use an App Password.';
+    } else if (error.command === 'API') {
+      errorMessage = 'Gmail API authentication failed.';
+      detailedHelp = 'Gmail requires App Passwords when 2FA is enabled. Generate one at https://myaccount.google.com/apppasswords or use Outlook instead.';
     }
 
     res.status(500).json({
       success: false,
       error: errorMessage,
-      code: error.code
+      help: detailedHelp,
+      code: error.code,
+      responseCode: error.responseCode
     });
   }
 });
@@ -373,16 +409,28 @@ app.post('/api/verify-config', async (req, res) => {
     console.error('Error verifying email config:', error);
     
     let errorMessage = error.message || 'Unknown error';
+    let detailedHelp = '';
+    
     if (error.code === 'EAUTH') {
       errorMessage = 'Email authentication failed. Please check your email credentials.';
+      detailedHelp = 'For Gmail: Use an App Password (not your regular password). Generate one at https://myaccount.google.com/apppasswords. For Outlook: Use your regular password or App Password if 2FA is enabled.';
     } else if (error.code === 'ECONNECTION') {
       errorMessage = 'Could not connect to email server. Please check your SMTP settings.';
+      detailedHelp = 'Check your internet connection and verify SMTP_HOST and SMTP_PORT are correct.';
+    } else if (error.responseCode === 535) {
+      errorMessage = 'Authentication failed. Invalid email or password.';
+      detailedHelp = 'Verify your email and password are correct. For Gmail, use an App Password.';
+    } else if (error.command === 'API') {
+      errorMessage = 'Gmail API authentication failed.';
+      detailedHelp = 'Gmail requires App Passwords when 2FA is enabled. Generate one at https://myaccount.google.com/apppasswords or use Outlook instead.';
     }
 
     res.status(500).json({
       success: false,
       error: errorMessage,
-      code: error.code
+      help: detailedHelp,
+      code: error.code,
+      responseCode: error.responseCode
     });
   }
 });
