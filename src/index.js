@@ -171,14 +171,52 @@ app.post('/api/send-email', async (req, res) => {
       smtpSecure: smtpSecure || process.env.SMTP_SECURE
     };
 
-    if (!emailConfig.email || !emailConfig.password) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email credentials not provided. Set EMAIL and EMAIL_PASSWORD in environment variables or request body.'
+    // Check if using Gmail API with OAuth2 (works in Kenya!)
+    const useGmailOAuth = req.body.useGmailAPI || process.env.USE_GMAIL_API === 'true';
+    
+    if (useGmailOAuth && emailConfig.service === 'gmail' && emailConfig.email && emailConfig.email.includes('@gmail.com')) {
+      if (!gmailOAuth) {
+        return res.status(400).json({
+          success: false,
+          error: 'Gmail OAuth2 not available. Install dependencies: npm install googleapis google-auth-library',
+          help: 'See GMAIL_OAUTH_SETUP.md for setup instructions'
+        });
+      }
+
+      if (!gmailOAuth.isAuthenticated()) {
+        return res.status(401).json({
+          success: false,
+          error: 'Gmail OAuth2 not authenticated',
+          authUrl: gmailOAuth.getAuthUrl(),
+          help: 'Visit the authUrl to authenticate, then use the returned code with /api/oauth2/callback'
+        });
+      }
+
+      // Send via Gmail API
+      const result = await gmailOAuth.sendEmailViaGmailAPI(
+        to,
+        subject,
+        text,
+        html
+      );
+
+      return res.json({
+        success: true,
+        message: 'Email sent successfully via Gmail API',
+        messageId: result.messageId,
+        method: 'gmail_api_oauth2'
       });
     }
 
-    // Create transporter
+    if (!emailConfig.email || !emailConfig.password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email credentials not provided. Set EMAIL and EMAIL_PASSWORD in environment variables or request body.',
+        help: 'Or use Gmail OAuth2 by setting useGmailAPI=true (works in Kenya!)'
+      });
+    }
+
+    // Create transporter (SMTP method)
     const transporter = createTransporter(emailConfig);
 
     // Prepare email options
