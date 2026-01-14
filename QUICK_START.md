@@ -66,7 +66,7 @@ This installs:
    - **Application type**: "Web application"
    - **Name**: "Email API Client"
    - **Authorized redirect URIs**:
-     - Add: `http://localhost:3001/api/oauth2/callback`
+     - Add: `http://localhost:10000/api/oauth2/callback` (or your port)
      - (For deployment, also add your production URL)
    - Click "Create"
    - **Download credentials**:
@@ -303,7 +303,7 @@ curl -X POST http://localhost:3001/api/send-email-with-attachments \
 
 ### Verify Email Configuration
 ```bash
-curl -X POST http://localhost:3001/api/verify-config \
+curl -X POST http://localhost:10000/api/verify-config \
   -H "Content-Type: application/json" \
   -d '{
     "email": "your_email@outlook.com",
