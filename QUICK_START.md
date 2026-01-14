@@ -121,8 +121,8 @@ You should see:
 
 7. **Complete authentication**:
    ```bash
-   # Replace YOUR_CODE with the code from step 6
-   curl "http://localhost:3001/api/oauth2/callback?code=YOUR_CODE"
+   # Replace YOUR_CODE with the code from step 6, and 10000 with your actual port
+   curl "http://localhost:10000/api/oauth2/callback?code=YOUR_CODE"
    ```
 
    You should see:
@@ -135,7 +135,8 @@ You should see:
 
 8. **Verify authentication**:
    ```bash
-   curl http://localhost:3001/api/oauth2/status
+   # Replace 10000 with your actual port
+   curl http://localhost:10000/api/oauth2/status
    ```
 
    Should show: `"authenticated": true`
@@ -314,14 +315,14 @@ curl -X POST http://localhost:10000/api/verify-config \
 
 ### Gmail OAuth2 Endpoints (if using Gmail)
 ```bash
-# Get auth URL
-curl http://localhost:3001/api/oauth2/auth
+# Get auth URL (replace 10000 with your actual port)
+curl http://localhost:10000/api/oauth2/auth
 
 # Check status
-curl http://localhost:3001/api/oauth2/status
+curl http://localhost:10000/api/oauth2/status
 
 # Complete auth (use code from browser)
-curl "http://localhost:3001/api/oauth2/callback?code=YOUR_CODE"
+curl "http://localhost:10000/api/oauth2/callback?code=YOUR_CODE"
 ```
 
 ---
