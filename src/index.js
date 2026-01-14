@@ -51,16 +51,26 @@ app.get('/health', (req, res) => {
 
 // Root endpoint
 app.get('/', (req, res) => {
+  const endpoints = {
+    health: '/health',
+    sendEmail: '/api/send-email',
+    sendEmailWithAttachments: '/api/send-email-with-attachments',
+    verifyConfig: '/api/verify-config'
+  };
+
+  if (gmailOAuth) {
+    endpoints.oauth2Auth = '/api/oauth2/auth';
+    endpoints.oauth2Callback = '/api/oauth2/callback';
+    endpoints.oauth2Status = '/api/oauth2/status';
+  }
+
   res.json({
     service: 'Email Sending API',
     version: '1.0.0',
-    endpoints: {
-      health: '/health',
-      sendEmail: '/api/send-email',
-      sendEmailWithAttachments: '/api/send-email-with-attachments',
-      verifyConfig: '/api/verify-config'
-    },
-    documentation: 'See README.md for usage instructions'
+    endpoints: endpoints,
+    documentation: 'See README.md for usage instructions',
+    gmailOAuth2: gmailOAuth ? (gmailOAuth.isAuthenticated() ? 'Authenticated ✅' : 'Available (not authenticated)') : 'Not available (install googleapis)',
+    note: 'Gmail OAuth2 works in Kenya! See GMAIL_OAUTH_SETUP.md'
   });
 });
 

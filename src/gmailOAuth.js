@@ -77,27 +77,23 @@ function getAuthUrl() {
 /**
  * Exchange authorization code for tokens
  */
-function getTokenFromCode(code) {
-  return new Promise((resolve, reject) => {
-    if (!oauth2Client) {
-      initializeOAuth2();
-    }
+async function getTokenFromCode(code) {
+  if (!oauth2Client) {
+    initializeOAuth2();
+  }
 
-    oauth2Client.getToken(code, (err, token) => {
-      if (err) {
-        reject(err);
-        return;
-      }
+  try {
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+    
+    // Save token for future use
+    const tokenPath = process.env.GOOGLE_TOKEN_PATH || path.join(__dirname, '..', 'token.json');
+    fs.writeFileSync(tokenPath, JSON.stringify(tokens, null, 2));
 
-      oauth2Client.setCredentials(token);
-      
-      // Save token for future use
-      const tokenPath = process.env.GOOGLE_TOKEN_PATH || path.join(__dirname, '..', 'token.json');
-      fs.writeFileSync(tokenPath, JSON.stringify(token, null, 2));
-
-      resolve(token);
-    });
-  });
+    return tokens;
+  } catch (error) {
+    throw new Error(`Failed to get token: ${error.message}`);
+  }
 }
 
 /**
